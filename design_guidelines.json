@@ -1,0 +1,105 @@
+{
+  "project_name": "Azad Senior Secondary School Website",
+  "theme": "light",
+  "archetype": "Modified Organic/Trust & High-Contrast (Credibility + Vibrancy)",
+  "design_philosophy": "A modern, warm, and credible school website. Avoids 'tech-bro' aesthetics and generic AI patterns (no purple gradients, no Inter font). It uses a distinct vibrant palette (Navy + Saffron/Amber) to convey authority and youthful energy. Emphasizes spaciousness, large imagery, and readable typography.",
+  "colors": {
+    "background": {
+      "primary": "bg-[#FDFBF7]",
+      "secondary": "bg-[#F3F4F6]",
+      "card": "bg-white",
+      "admin_bg": "bg-[#F8FAFC]"
+    },
+    "text": {
+      "primary": "text-[#0F172A]",
+      "secondary": "text-[#475569]",
+      "muted": "text-[#64748B]",
+      "inverse": "text-white"
+    },
+    "brand": {
+      "primary": "bg-[#0F172A]",
+      "primary_hover": "hover:bg-[#1E293B]",
+      "accent": "bg-[#EA580C]",
+      "accent_hover": "hover:bg-[#C2410C]",
+      "accent_text": "text-[#EA580C]"
+    },
+    "borders": {
+      "light": "border-[#E2E8F0]",
+      "medium": "border-[#CBD5E1]",
+      "dark": "border-[#0F172A]"
+    }
+  },
+  "typography": {
+    "font_family": {
+      "heading": "font-sans (Use 'Cabinet Grotesk' or 'Outfit' via Google Fonts/local)",
+      "body": "font-sans (Use 'IBM Plex Sans' or 'Work Sans')"
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight font-bold",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-bold",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "h4": "text-lg sm:text-xl font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm text-[#475569]",
+      "overline": "text-xs font-bold uppercase tracking-[0.2em] text-[#EA580C]"
+    }
+  },
+  "spacing_and_layout": {
+    "section_padding": "py-20 md:py-32",
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "grid_bento": "grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-6 md:gap-8",
+    "grid_dashboard": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6",
+    "border_radius": "rounded-2xl for soft UI elements, rounded-none for brutalist/high-contrast sections"
+  },
+  "components": {
+    "header": {
+      "style": "sticky top-0 z-50 backdrop-blur-xl bg-[#FDFBF7]/80 border-b border-[#E2E8F0]",
+      "links": "text-base font-medium text-[#0F172A] hover:text-[#EA580C] transition-colors"
+    },
+    "buttons": {
+      "primary": "inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-[#0F172A] rounded-full hover:bg-[#1E293B] transition-all",
+      "accent": "inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-[#EA580C] rounded-full hover:bg-[#C2410C] transition-all",
+      "outline": "inline-flex items-center justify-center px-6 py-3 text-base font-medium text-[#0F172A] bg-transparent border-2 border-[#0F172A] rounded-full hover:bg-[#0F172A] hover:text-white transition-all"
+    },
+    "cards": {
+      "style": "bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden hover:shadow-lg transition-shadow duration-300"
+    },
+    "admin_panel": {
+      "sidebar": "w-64 bg-[#0F172A] text-white min-h-screen",
+      "table": "w-full text-left border-collapse",
+      "th": "px-4 py-3 border-b border-[#E2E8F0] text-sm font-semibold text-[#0F172A] bg-[#F8FAFC]",
+      "td": "px-4 py-3 border-b border-[#E2E8F0] text-sm text-[#475569]"
+    }
+  },
+  "media": {
+    "hero_background": {
+      "url": "https://images.unsplash.com/photo-1524069290683-0457abfe42c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGluZGlhbiUyMHNjaG9vbCUyMHN0dWRlbnRzJTIwZ3JvdXB8ZW58MHx8fHwxNzc4MjQ5NDkxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Happy group of children, used as hero image with an overlay",
+      "overlay": "bg-gradient-to-r from-[#0F172A]/80 to-[#0F172A]/40"
+    },
+    "about_image": {
+      "url": "https://images.unsplash.com/photo-1698993026848-f67c1eb7f989?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHw0fHxpbmRpYW4lMjBzY2hvb2wlMjBzdHVkZW50cyUyMGNsYXNzcm9vbXxlbnwwfHx8fDE3NzgyNDk0ODB8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Young boy sitting at desk in classroom"
+    },
+    "programs": {
+      "science": "https://images.unsplash.com/photo-1742137587486-fdef8cdd25bd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHw0fHxoaWdoJTIwc2Nob29sJTIwc2NpZW5jZSUyMGxhYiUyMGNoZW1pc3RyeXxlbnwwfHx8fDE3NzgyNDk0ODB8MA&ixlib=rb-4.1.0&q=85",
+      "sports": "https://images.unsplash.com/photo-1771909712619-54b241d2f8ff?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwxfHxzY2hvb2wlMjBzcG9ydHMlMjBncm91bmQlMjBjaGlsZHJlbiUyMHBsYXlpbmd8ZW58MHx8fHwxNzc4MjQ5NDgwfDA&ixlib=rb-4.1.0&q=85",
+      "arts": "https://images.unsplash.com/photo-1551731409-43eb3e517a1a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwyfHxpbmRpYW4lMjBzY2hvb2wlMjBzdHVkZW50cyUyMGNsYXNzcm9vbXxlbnwwfHx8fDE3NzgyNDk0ODB8MA&ixlib=rb-4.1.0&q=85"
+    },
+    "gallery": [
+      "https://images.pexels.com/photos/26319154/pexels-photo-26319154.jpeg",
+      "https://images.unsplash.com/photo-1569173675610-42c361a86e37?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwyfHxoYXBweSUyMGluZGlhbiUyMHNjaG9vbCUyMHN0dWRlbnRzJTIwZ3JvdXB8ZW58MHx8fHwxNzc4MjQ5NDkxfDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1777626753049-a896105cb32f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHwzfHxzY2hvb2wlMjBzcG9ydHMlMjBncm91bmQlMjBjaGlsZHJlbiUyMHBsYXlpbmd8ZW58MHx8fHwxNzc4MjQ5NDgwfDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1698993026848-f67c1eb7f989?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHw0fHxpbmRpYW4lMjBzY2hvb2wlMjBzdHVkZW50cyUyMGNsYXNzcm9vbXxlbnwwfHx8fDE3NzgyNDk0ODB8MA&ixlib=rb-4.1.0&q=85"
+    ]
+  },
+  "specific_instructions_for_main_agent": [
+    "Inject fonts: Add <link href='https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap' rel='stylesheet'> and <link href='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap' rel='stylesheet'> to index.html.",
+    "Configure tailwind.config.js to map 'sans' to IBM Plex Sans and create a new key 'display' for Cabinet Grotesk. Use font-display for all Headings.",
+    "Admission Form: Use Shadcn form components, multi-step structure. Keep styling clean without deep card shadows. Use subtle 1px borders.",
+    "Contact Page: Embed a responsive Google Map iframe (can use a generic central location or real one if provided).",
+    "Admin Panel: Build an intuitive dashboard with a sidebar. Follow 'Control Room' dense grid design for data.",
+    "Add 'data-testid' to all buttons, links, and forms for automated testing.",
+    "Do NOT use 'Inter' font or generic purple gradients."
+  ]
+}
