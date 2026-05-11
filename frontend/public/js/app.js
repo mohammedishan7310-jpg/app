@@ -70,23 +70,24 @@ function renderLayout(active) {
             <div class="text-[11px] uppercase tracking-[0.18em] text-ash">Sr. Sec. School</div>
           </div>
         </a>
-        <nav class="hidden md:flex items-center gap-8">
-          ${["Home:/", "Admissions:/admissions.html", "Gallery:/gallery.html", "Contact:/contact.html"]
+        <nav class="hidden lg:flex items-center gap-6">
+          ${["Home:/", "Admissions:/admissions.html", "Results:/results.html", "Attendance:/attendance.html", "Gallery:/gallery.html", "Contact:/contact.html"]
             .map(s => { const [label, href] = s.split(":");
               const isActive = active === label.toLowerCase();
-              return `<a href="${href}" data-testid="nav-${label.toLowerCase()}" class="text-[15px] font-medium transition-colors ${isActive ? "text-saffron" : "text-ink hover:text-saffron"}">${label}</a>`;
+              return `<a href="${href}" data-testid="nav-${label.toLowerCase()}" class="text-[14px] font-medium transition-colors ${isActive ? "text-saffron" : "text-ink hover:text-saffron"}">${label}</a>`;
             }).join("")}
         </nav>
-        <div class="hidden md:block">
+        <div class="hidden lg:flex items-center gap-3">
+          <a href="/admin-login.html" data-testid="nav-admin" class="text-[13px] font-medium text-ash hover:text-saffron transition-colors">Admin</a>
           <a href="/admissions.html" data-testid="apply-cta" class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-saffron rounded-full hover:bg-saffronDark transition-colors">Apply Now</a>
         </div>
-        <button id="mobileMenuToggle" data-testid="mobile-menu-toggle" class="md:hidden p-2" aria-label="menu">
+        <button id="mobileMenuToggle" data-testid="mobile-menu-toggle" class="lg:hidden p-2" aria-label="menu">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
       </div>
-      <div id="mobileMenu" class="md:hidden border-t border-slate-200 bg-cream hidden">
+      <div id="mobileMenu" class="lg:hidden border-t border-slate-200 bg-cream hidden">
         <div class="px-4 py-4 flex flex-col gap-1">
-          ${["Home:/", "Admissions:/admissions.html", "Gallery:/gallery.html", "Contact:/contact.html"]
+          ${["Home:/", "Admissions:/admissions.html", "Results:/results.html", "Attendance:/attendance.html", "Gallery:/gallery.html", "Contact:/contact.html", "Admin:/admin-login.html"]
             .map(s => { const [label, href] = s.split(":");
               const isActive = active === label.toLowerCase();
               return `<a href="${href}" data-testid="mobile-nav-${label.toLowerCase()}" class="px-3 py-3 rounded-lg text-base font-medium ${isActive ? "bg-ink text-cream" : "text-ink hover:bg-slate-100"}">${label}</a>`;

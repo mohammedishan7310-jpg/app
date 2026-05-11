@@ -50,6 +50,8 @@
             { id: "overview", label: "Overview" },
             { id: "admissions", label: "Admissions" },
             { id: "contacts", label: "Contacts" },
+            { id: "results", label: "Results" },
+            { id: "attendance", label: "Attendance" },
             { id: "gallery", label: "Gallery" },
             { id: "announcements", label: "Announcements" },
         ];
@@ -75,6 +77,8 @@
             if (tab === "overview") return renderOverview(panel);
             if (tab === "admissions") return renderAdmissions(panel);
             if (tab === "contacts") return renderContacts(panel);
+            if (tab === "results") return renderResults(panel);
+            if (tab === "attendance") return renderAttendance(panel);
             if (tab === "gallery") return renderGallery(panel);
             if (tab === "announcements") return renderAnnouncements(panel);
         }
@@ -93,6 +97,8 @@
                     { k: "admissions", label: "Total Admissions" },
                     { k: "pending_admissions", label: "Pending Reviews" },
                     { k: "contacts", label: "Contact Messages" },
+                    { k: "results", label: "Results Published" },
+                    { k: "attendance", label: "Attendance Records" },
                     { k: "gallery_images", label: "Gallery Images" },
                     { k: "announcements", label: "Announcements" },
                 ];
@@ -181,6 +187,174 @@
               </div>`).join("");
         }
         function escapeHtml(s) { return (s||"").replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[ch]); }
+
+        // ---- RESULTS ----
+        async function renderResults(panel) {
+            panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-results-panel">
+              <h1 class="font-display font-bold text-2xl md:text-3xl text-ink mb-6">Results</h1>
+              <form onsubmit="createResult(event)" class="bg-white border border-slate-200 rounded-2xl p-6 mb-6 space-y-4" data-testid="result-form">
+                <h3 class="font-display font-semibold text-ink">Publish a new result</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                  <input id="res_student_name" required placeholder="Student Name" data-testid="result-student-name" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <input id="res_roll" required placeholder="Roll Number" data-testid="result-roll" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <select id="res_class" required data-testid="result-class" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm"><option value="">Select class</option></select>
+                  <input id="res_exam" required placeholder="Exam Name (e.g. Half-Yearly 2026)" data-testid="result-exam" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-2"><span class="text-sm font-medium text-ink">Subjects</span><button type="button" onclick="addSubject()" class="text-xs text-saffron hover:text-saffronDark font-semibold">+ Add subject</button></div>
+                  <div id="subjectsList" class="space-y-2"></div>
+                  <div id="resPreview" class="mt-3 text-sm text-ash"></div>
+                </div>
+                <textarea id="res_remarks" placeholder="Remarks (optional)" rows="2" data-testid="result-remarks" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm"></textarea>
+                <button type="submit" data-testid="result-submit" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-ink rounded-full hover:bg-ink2">+ Publish result</button>
+              </form>
+              <div id="resultsList" class="space-y-3">Loading...</div>
+            </div>`;
+            const cls = document.getElementById("res_class");
+            ["Nursery","LKG","UKG","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"].forEach(c => {
+                const o = document.createElement("option"); o.value = c; o.textContent = "Class " + c; cls.appendChild(o);
+            });
+            addSubject(); addSubject(); addSubject();
+            updatePreview();
+            await loadResults();
+        }
+        function addSubject() {
+            const list = document.getElementById("subjectsList");
+            const row = document.createElement("div");
+            row.className = "grid grid-cols-12 gap-2 items-center";
+            row.innerHTML = `
+              <input type="text" placeholder="Subject name" class="col-span-5 px-3 py-2 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm sub-name">
+              <input type="number" step="0.5" placeholder="Max" oninput="updatePreview()" class="col-span-3 px-3 py-2 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm sub-max">
+              <input type="number" step="0.5" placeholder="Obtained" oninput="updatePreview()" class="col-span-3 px-3 py-2 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm sub-obt">
+              <button type="button" onclick="this.parentElement.remove(); updatePreview();" class="col-span-1 text-red-500 hover:text-red-700">×</button>`;
+            list.appendChild(row);
+        }
+        function readSubjects() {
+            return Array.from(document.querySelectorAll("#subjectsList > div")).map(row => ({
+                name: row.querySelector(".sub-name").value.trim(),
+                max_marks: parseFloat(row.querySelector(".sub-max").value) || 0,
+                marks_obtained: parseFloat(row.querySelector(".sub-obt").value) || 0,
+            })).filter(s => s.name);
+        }
+        function updatePreview() {
+            const subs = readSubjects();
+            if (!subs.length) { document.getElementById("resPreview").textContent = ""; return; }
+            const tot = subs.reduce((a, b) => a + b.marks_obtained, 0);
+            const mx = subs.reduce((a, b) => a + b.max_marks, 0);
+            const pct = mx > 0 ? ((tot / mx) * 100).toFixed(2) : 0;
+            document.getElementById("resPreview").textContent = `Live preview: Total ${tot}/${mx} = ${pct}%`;
+        }
+        async function createResult(e) {
+            e.preventDefault();
+            const subjects = readSubjects().filter(s => s.max_marks > 0);
+            if (!subjects.length) { toast("Add at least one subject with marks", "error"); return; }
+            const payload = {
+                student_name: document.getElementById("res_student_name").value.trim(),
+                roll_number: document.getElementById("res_roll").value.trim(),
+                student_class: document.getElementById("res_class").value,
+                exam_name: document.getElementById("res_exam").value.trim(),
+                subjects, remarks: document.getElementById("res_remarks").value.trim(),
+            };
+            try {
+                await apiFetch("/admin/results", { method: "POST", body: JSON.stringify(payload) });
+                toast("Result published", "success");
+                document.getElementById("res_student_name").value = "";
+                document.getElementById("res_roll").value = "";
+                document.getElementById("res_exam").value = "";
+                document.getElementById("res_remarks").value = "";
+                document.querySelectorAll("#subjectsList > div").forEach(r => r.querySelectorAll("input").forEach(i => i.value = ""));
+                updatePreview();
+                loadResults();
+            } catch (e) { toast(e.message, "error"); }
+        }
+        async function loadResults() {
+            const items = await apiFetch("/admin/results");
+            const list = document.getElementById("resultsList");
+            if (!items.length) { list.innerHTML = '<div class="text-center text-ash py-12 bg-white border border-slate-200 rounded-2xl">No results published yet.</div>'; return; }
+            list.innerHTML = items.map(r => `
+              <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-start justify-between gap-3" data-testid="result-row-${r.id}">
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <h3 class="font-display font-bold text-ink truncate">${escapeHtml(r.student_name)}</h3>
+                    <span class="text-xs text-ash">Roll ${escapeHtml(r.roll_number)} • Class ${escapeHtml(r.student_class)}</span>
+                  </div>
+                  <div class="text-xs text-ash mt-1">${escapeHtml(r.exam_name)} — ${r.total_obtained}/${r.total_max} (${r.percentage}%) — Grade ${r.grade}</div>
+                </div>
+                <button onclick="deleteResult('${r.id}')" data-testid="delete-result-${r.id}" class="p-2 hover:bg-red-50 hover:text-red-600 rounded-lg text-ash">🗑</button>
+              </div>`).join("");
+        }
+        async function deleteResult(id) {
+            if (!confirm("Delete this result?")) return;
+            try { await apiFetch("/admin/results/" + id, { method: "DELETE" }); toast("Deleted", "success"); loadResults(); }
+            catch (e) { toast(e.message, "error"); }
+        }
+
+        // ---- ATTENDANCE ----
+        async function renderAttendance(panel) {
+            panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-attendance-panel">
+              <h1 class="font-display font-bold text-2xl md:text-3xl text-ink mb-6">Attendance</h1>
+              <form onsubmit="createAttendance(event)" class="bg-white border border-slate-200 rounded-2xl p-6 mb-6 space-y-4" data-testid="attendance-admin-form">
+                <h3 class="font-display font-semibold text-ink">Add monthly attendance</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                  <input id="att_student_name" required placeholder="Student Name" data-testid="attendance-student-name" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <input id="att_roll" required placeholder="Roll Number" data-testid="attendance-admin-roll" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <select id="att_class" required data-testid="attendance-admin-class" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm"><option value="">Select class</option></select>
+                  <input id="att_month" required placeholder="Month (e.g. January 2026)" data-testid="attendance-month" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <input id="att_total" type="number" min="1" required placeholder="Total Days" data-testid="attendance-total" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <input id="att_present" type="number" min="0" required placeholder="Present Days" data-testid="attendance-present" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                </div>
+                <textarea id="att_remarks" placeholder="Remarks (optional)" rows="2" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm"></textarea>
+                <button type="submit" data-testid="attendance-admin-submit" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-ink rounded-full hover:bg-ink2">+ Save attendance</button>
+              </form>
+              <div id="attendanceList" class="space-y-3">Loading...</div>
+            </div>`;
+            const cls = document.getElementById("att_class");
+            ["Nursery","LKG","UKG","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"].forEach(c => {
+                const o = document.createElement("option"); o.value = c; o.textContent = "Class " + c; cls.appendChild(o);
+            });
+            await loadAttendance();
+        }
+        async function createAttendance(e) {
+            e.preventDefault();
+            const total = parseInt(document.getElementById("att_total").value, 10);
+            const present = parseInt(document.getElementById("att_present").value, 10);
+            if (present > total) { toast("Present days cannot exceed total days", "error"); return; }
+            const payload = {
+                student_name: document.getElementById("att_student_name").value.trim(),
+                roll_number: document.getElementById("att_roll").value.trim(),
+                student_class: document.getElementById("att_class").value,
+                month: document.getElementById("att_month").value.trim(),
+                total_days: total, present_days: present,
+                remarks: document.getElementById("att_remarks").value.trim(),
+            };
+            try {
+                await apiFetch("/admin/attendance", { method: "POST", body: JSON.stringify(payload) });
+                toast("Attendance saved", "success");
+                ["att_student_name","att_roll","att_month","att_total","att_present","att_remarks"].forEach(id => document.getElementById(id).value = "");
+                loadAttendance();
+            } catch (e) { toast(e.message, "error"); }
+        }
+        async function loadAttendance() {
+            const items = await apiFetch("/admin/attendance");
+            const list = document.getElementById("attendanceList");
+            if (!items.length) { list.innerHTML = '<div class="text-center text-ash py-12 bg-white border border-slate-200 rounded-2xl">No attendance records yet.</div>'; return; }
+            list.innerHTML = items.map(a => `
+              <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-start justify-between gap-3" data-testid="attendance-row-${a.id}">
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <h3 class="font-display font-bold text-ink truncate">${escapeHtml(a.student_name)}</h3>
+                    <span class="text-xs text-ash">Roll ${escapeHtml(a.roll_number)} • Class ${escapeHtml(a.student_class)}</span>
+                  </div>
+                  <div class="text-xs text-ash mt-1">${escapeHtml(a.month)} — ${a.present_days}/${a.total_days} days (${a.percentage}%)</div>
+                </div>
+                <button onclick="deleteAttendance('${a.id}')" data-testid="delete-attendance-${a.id}" class="p-2 hover:bg-red-50 hover:text-red-600 rounded-lg text-ash">🗑</button>
+              </div>`).join("");
+        }
+        async function deleteAttendance(id) {
+            if (!confirm("Delete this record?")) return;
+            try { await apiFetch("/admin/attendance/" + id, { method: "DELETE" }); toast("Deleted", "success"); loadAttendance(); }
+            catch (e) { toast(e.message, "error"); }
+        }
 
         // ---- GALLERY ----
         async function renderGallery(panel) {

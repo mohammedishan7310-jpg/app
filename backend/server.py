@@ -165,6 +165,36 @@ class AnnouncementCreate(BaseModel):
     category: Optional[str] = "General"
 
 
+class ResultSubject(BaseModel):
+    name: str
+    max_marks: float
+    marks_obtained: float
+
+
+class ResultCreate(BaseModel):
+    student_name: str
+    roll_number: str
+    student_class: str
+    exam_name: str
+    subjects: List[ResultSubject]
+    remarks: Optional[str] = ""
+
+
+class AttendanceCreate(BaseModel):
+    student_name: str
+    roll_number: str
+    student_class: str
+    month: str  # e.g., "January 2026"
+    present_days: int
+    total_days: int
+    remarks: Optional[str] = ""
+
+
+class LookupRequest(BaseModel):
+    roll_number: str
+    student_class: str
+
+
 # ---------- Public routes ----------
 @api_router.get("/")
 async def root():
@@ -323,7 +353,111 @@ async def admin_stats(current=Depends(get_current_user)):
         "contacts": await db.contacts.count_documents({}),
         "gallery_images": await db.gallery.count_documents({"is_deleted": False}),
         "announcements": await db.announcements.count_documents({}),
+        "results": await db.results.count_documents({}),
+        "attendance": await db.attendance.count_documents({}),
     }
+
+
+# ---------- Results ----------
+def _norm(s: str) -> str:
+    return (s or "").strip().lower()
+
+
+def _compute_result_totals(subjects):
+    total_obtained = sum(s["marks_obtained"] for s in subjects)
+    total_max = sum(s["max_marks"] for s in subjects)
+    percentage = round((total_obtained / total_max) * 100, 2) if total_max else 0
+    if percentage >= 90: grade = "A+"
+    elif percentage >= 80: grade = "A"
+    elif percentage >= 70: grade = "B+"
+    elif percentage >= 60: grade = "B"
+    elif percentage >= 50: grade = "C"
+    elif percentage >= 33: grade = "D"
+    else: grade = "F"
+    return total_obtained, total_max, percentage, grade
+
+
+@api_router.post("/admin/results")
+async def admin_create_result(payload: ResultCreate, current=Depends(get_current_user)):
+    doc = payload.model_dump()
+    doc["subjects"] = [s for s in doc["subjects"] if s.get("name")]
+    if not doc["subjects"]:
+        raise HTTPException(status_code=400, detail="At least one subject required")
+    obtained, mx, pct, grade = _compute_result_totals(doc["subjects"])
+    doc["total_obtained"] = obtained
+    doc["total_max"] = mx
+    doc["percentage"] = pct
+    doc["grade"] = grade
+    doc["roll_number_norm"] = _norm(doc["roll_number"])
+    doc["student_class_norm"] = _norm(doc["student_class"])
+    doc["id"] = str(uuid.uuid4())
+    doc["created_at"] = datetime.now(timezone.utc).isoformat()
+    await db.results.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api_router.get("/admin/results")
+async def admin_list_results(current=Depends(get_current_user)):
+    items = await db.results.find({}, {"_id": 0}).sort("created_at", -1).to_list(2000)
+    return items
+
+
+@api_router.delete("/admin/results/{result_id}")
+async def admin_delete_result(result_id: str, current=Depends(get_current_user)):
+    res = await db.results.delete_one({"id": result_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"ok": True}
+
+
+@api_router.post("/results/lookup")
+async def results_lookup(payload: LookupRequest):
+    items = await db.results.find(
+        {"roll_number_norm": _norm(payload.roll_number), "student_class_norm": _norm(payload.student_class)},
+        {"_id": 0, "roll_number_norm": 0, "student_class_norm": 0}
+    ).sort("created_at", -1).to_list(50)
+    return items
+
+
+# ---------- Attendance ----------
+@api_router.post("/admin/attendance")
+async def admin_create_attendance(payload: AttendanceCreate, current=Depends(get_current_user)):
+    if payload.total_days <= 0 or payload.present_days < 0 or payload.present_days > payload.total_days:
+        raise HTTPException(status_code=400, detail="Invalid days values")
+    doc = payload.model_dump()
+    doc["percentage"] = round((payload.present_days / payload.total_days) * 100, 2)
+    doc["absent_days"] = payload.total_days - payload.present_days
+    doc["roll_number_norm"] = _norm(doc["roll_number"])
+    doc["student_class_norm"] = _norm(doc["student_class"])
+    doc["id"] = str(uuid.uuid4())
+    doc["created_at"] = datetime.now(timezone.utc).isoformat()
+    await db.attendance.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api_router.get("/admin/attendance")
+async def admin_list_attendance(current=Depends(get_current_user)):
+    items = await db.attendance.find({}, {"_id": 0}).sort("created_at", -1).to_list(2000)
+    return items
+
+
+@api_router.delete("/admin/attendance/{att_id}")
+async def admin_delete_attendance(att_id: str, current=Depends(get_current_user)):
+    res = await db.attendance.delete_one({"id": att_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    return {"ok": True}
+
+
+@api_router.post("/attendance/lookup")
+async def attendance_lookup(payload: LookupRequest):
+    items = await db.attendance.find(
+        {"roll_number_norm": _norm(payload.roll_number), "student_class_norm": _norm(payload.student_class)},
+        {"_id": 0, "roll_number_norm": 0, "student_class_norm": 0}
+    ).sort("created_at", -1).to_list(50)
+    return items
 
 
 # ---------- Startup ----------
