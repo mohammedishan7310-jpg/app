@@ -27,6 +27,13 @@ Create a modern full-stack school website for Azad Senior Secondary School with 
 - Mobile-responsive header + admin nav
 - Backend tests: 14/14 passing; Frontend tests: all passing
 
+## Iteration 2 (May 2026) — Frontend rewritten to plain HTML/CSS/JS
+- Removed React; site is now multi-page static HTML in `/app/frontend/public/*.html` using Tailwind CDN + vanilla JS
+- Shared helpers in `/app/frontend/public/js/app.js`: `apiFetch`, `toast`, `renderLayout`, `getCurrentUser`, `logout`
+- Pages: `index.html` (Home), `admissions.html`, `gallery.html`, `contact.html`, `admin-login.html`, `admin.html` (hash-routed tabs)
+- All references to "CBSE" replaced with "RBSE"
+- Backend unchanged; all flows verified by testing agent (100% pass)
+
 ## Backlog
 **P1**
 - Email notifications on new admission/contact (Resend/SendGrid)
