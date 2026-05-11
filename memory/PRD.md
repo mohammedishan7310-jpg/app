@@ -34,6 +34,14 @@ Create a modern full-stack school website for Azad Senior Secondary School with 
 - All references to "CBSE" replaced with "RBSE"
 - Backend unchanged; all flows verified by testing agent (100% pass)
 
+## Iteration 4 (May 2026) — Mobile responsiveness pass
+- Added `html, body { overflow-x: hidden }` on every page to kill stray horizontal scroll
+- Home hero rebalanced: text scaled `text-[2rem] sm:text-5xl lg:text-6xl`, padding `pt-16 pb-20 sm:pt-24 sm:pb-32 md:pt-32`, stronger overlay below 640px (vertical gradient via media query)
+- All public pages: title sections now `text-3xl sm:text-4xl md:text-5xl lg:text-6xl` and `py-12 sm:py-16 md:py-24`
+- Stats strip: smaller numbers + tighter gap on mobile
+- CTA section: scaled padding/text down for small screens
+- Verified at 414px viewport: no horizontal scroll, hamburger visible, hero readable, forms full-width, stats in 2-column grid
+
 ## Iteration 3 (May 2026) — Results + Attendance features
 - Backend: added `/api/admin/results` (POST/GET/DELETE) and public `/api/results/lookup`. Auto-computes total, percentage, grade (A+/A/B+/B/C/D/F).
 - Backend: added `/api/admin/attendance` (POST/GET/DELETE) and public `/api/attendance/lookup`. Auto-computes percentage and absent_days.
