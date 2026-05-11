@@ -34,6 +34,15 @@ Create a modern full-stack school website for Azad Senior Secondary School with 
 - All references to "CBSE" replaced with "RBSE"
 - Backend unchanged; all flows verified by testing agent (100% pass)
 
+## Iteration 3 (May 2026) — Results + Attendance features
+- Backend: added `/api/admin/results` (POST/GET/DELETE) and public `/api/results/lookup`. Auto-computes total, percentage, grade (A+/A/B+/B/C/D/F).
+- Backend: added `/api/admin/attendance` (POST/GET/DELETE) and public `/api/attendance/lookup`. Auto-computes percentage and absent_days.
+- Backend: case-insensitive lookup via `roll_number_norm`/`student_class_norm`; compound indexes on both collections.
+- Frontend: new public pages `/results.html` (printable result card with subject-wise marksheet) and `/attendance.html` (monthly summary + overall %).
+- Frontend admin: 2 new tabs (Results, Attendance) with dynamic-subject forms and live percentage preview.
+- Header nav updated (Home / Admissions / Results / Attendance / Gallery / Contact + Admin + Apply Now). Breakpoint moved to `lg:` for cleaner mobile nav.
+- Tests: 32/32 backend pytest pass (grade boundaries, CRUD, validation, auth gates); 10/10 frontend end-to-end flows pass.
+
 ## Backlog
 **P1**
 - Email notifications on new admission/contact (Resend/SendGrid)
