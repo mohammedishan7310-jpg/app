@@ -14,32 +14,42 @@
 </head>
 <body data-testid="admin-dashboard">
     <div class="min-h-screen flex">
-        <!-- Sidebar -->
-        <aside class="hidden md:flex flex-col w-64 bg-ink text-white min-h-screen">
-            <a href="/" class="flex items-center gap-2.5 px-6 h-16 border-b border-white/10">
-                <div class="h-9 w-9 rounded-xl bg-saffron flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                </div>
-                <div class="leading-tight">
-                    <div class="font-display font-bold text-white text-sm">Azad School</div>
-                    <div class="text-[10px] uppercase tracking-[0.18em] text-saffron">Admin</div>
-                </div>
-            </a>
+        <!-- Mobile drawer overlay -->
+        <div id="drawerOverlay" onclick="toggleDrawer(false)" class="hidden fixed inset-0 bg-ink/60 z-40 lg:hidden"></div>
+
+        <!-- Sidebar (always rendered; off-canvas on mobile, fixed on desktop) -->
+        <aside id="adminSidebar" class="fixed lg:sticky lg:top-0 top-0 left-0 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col w-64 bg-ink text-white h-screen lg:h-screen overflow-y-auto">
+            <div class="flex items-center justify-between px-5 h-16 border-b border-white/10">
+                <a href="/" class="flex items-center gap-2.5">
+                    <div class="h-9 w-9 rounded-xl bg-saffron flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    </div>
+                    <div class="leading-tight">
+                        <div class="font-display font-bold text-white text-sm">Azad School</div>
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-saffron">Admin</div>
+                    </div>
+                </a>
+                <button onclick="toggleDrawer(false)" class="lg:hidden p-1 text-white/70 hover:text-white" aria-label="close menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
             <nav id="sidebar" class="flex-1 px-3 py-6 space-y-1"></nav>
             <div class="px-4 py-4 border-t border-white/10">
-                <div id="adminEmail" class="text-xs text-cream/60 mb-2"></div>
+                <div id="adminEmail" class="text-xs text-cream/60 mb-2 truncate"></div>
                 <button onclick="logout()" data-testid="admin-logout-btn" class="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm bg-white/10 hover:bg-white/20 rounded-lg">Logout</button>
             </div>
         </aside>
 
-        <!-- Mobile top -->
-        <div class="md:hidden fixed top-0 inset-x-0 bg-ink text-white px-4 h-14 flex items-center justify-between z-40">
-            <a href="/" class="font-display font-bold">Azad Admin</a>
-            <button onclick="logout()" class="text-cream/80 text-sm">Logout</button>
+        <!-- Mobile top bar -->
+        <div class="lg:hidden fixed top-0 inset-x-0 bg-ink text-white px-4 h-14 flex items-center justify-between z-30">
+            <button onclick="toggleDrawer(true)" data-testid="admin-menu-btn" aria-label="menu" class="p-2 -ml-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <a href="/" class="font-display font-bold text-base">Azad Admin</a>
+            <button onclick="logout()" class="text-cream/80 text-xs font-medium">Logout</button>
         </div>
 
-        <main class="flex-1 mt-14 md:mt-0">
-            <div id="mobileTabs" class="md:hidden border-b border-slate-200 bg-white px-4 py-3 overflow-x-auto flex gap-2"></div>
+        <main class="flex-1 min-w-0 mt-14 lg:mt-0">
             <div id="panel"></div>
         </main>
     </div>
@@ -64,11 +74,15 @@
         function renderNav() {
             const tab = currentTab();
             document.getElementById("sidebar").innerHTML = TABS.map(t =>
-                `<a href="#${t.id}" data-testid="sidebar-${t.label.toLowerCase()}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${tab===t.id?"bg-saffron text-ink":"text-cream/80 hover:bg-white/10 hover:text-white"}">${t.label}</a>`
+                `<a href="#${t.id}" onclick="toggleDrawer(false)" data-testid="sidebar-${t.label.toLowerCase()}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${tab===t.id?"bg-saffron text-ink":"text-cream/80 hover:bg-white/10 hover:text-white"}">${t.label}</a>`
             ).join("");
-            document.getElementById("mobileTabs").innerHTML = TABS.map(t =>
-                `<a href="#${t.id}" class="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium ${tab===t.id?"bg-ink text-white":"bg-cream text-ink border border-slate-200"}">${t.label}</a>`
-            ).join("");
+        }
+
+        function toggleDrawer(open) {
+            const sb = document.getElementById("adminSidebar");
+            const ov = document.getElementById("drawerOverlay");
+            if (open) { sb.classList.remove("-translate-x-full"); ov.classList.remove("hidden"); document.body.style.overflow = "hidden"; }
+            else { sb.classList.add("-translate-x-full"); ov.classList.add("hidden"); document.body.style.overflow = ""; }
         }
 
         async function renderPanel() {
@@ -89,7 +103,7 @@
             panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-overview">
               <h1 class="font-display font-bold text-2xl md:text-3xl text-ink">Dashboard</h1>
               <p class="text-sm text-ash mt-1 mb-8">At-a-glance view of your school operations.</p>
-              <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
+              <div id="statsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"></div>
             </div>`;
             try {
                 const s = await apiFetch("/admin/stats");

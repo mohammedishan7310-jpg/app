@@ -34,6 +34,14 @@ Create a modern full-stack school website for Azad Senior Secondary School with 
 - All references to "CBSE" replaced with "RBSE"
 - Backend unchanged; all flows verified by testing agent (100% pass)
 
+## Iteration 5 (May 2026) — Admin panel mobile UX
+- Sidebar converted to **slide-in drawer** on mobile/tablet (< 1024px): hidden by default with `-translate-x-full`, slides in on hamburger tap, dimmed overlay backdrop, close button + auto-close on nav link tap.
+- Persistent sidebar on desktop (`lg:translate-x-0 lg:sticky`).
+- Mobile top bar redesigned: hamburger (left) + brand (center) + Logout (right).
+- Stats grid breakpoints widened: `grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4` — single column on mobile so no label truncation, 4 cols on wide desktop.
+- Removed horizontal-scroll tab strip in favor of drawer nav.
+- Verified at 414px: drawer opens, all 7 tab labels visible, stat cards readable, forms full-width.
+
 ## Iteration 4 (May 2026) — Mobile responsiveness pass
 - Added `html, body { overflow-x: hidden }` on every page to kill stray horizontal scroll
 - Home hero rebalanced: text scaled `text-[2rem] sm:text-5xl lg:text-6xl`, padding `pt-16 pb-20 sm:pt-24 sm:pb-32 md:pt-32`, stronger overlay below 640px (vertical gradient via media query)
