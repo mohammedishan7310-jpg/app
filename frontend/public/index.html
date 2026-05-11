@@ -1,33 +1,182 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#0F172A" />
-        <meta name="description" content="Azad Senior Secondary School - nurturing young minds with vibrant academics, sports, arts and values." />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
-        <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <title>Azad Senior Secondary School</title>
-        <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
-        <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
-    </head>
-    <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="display: inline-flex !important; box-sizing: border-box; width: 178px; height: 40px; padding: 8px 12px 8px 12px; align-items: center !important; gap: 8px; border-radius: 50px !important; background: #000 !important; position: fixed !important; bottom: 16px; right: 16px; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, sans-serif !important; font-size: 12px !important; z-index: 9999 !important;"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M15.5702 8.13142C15.7729 8.0412 16.0007 8.18878 15.9892 8.4103C15.8374 11.3192 14.0965 14.0405 11.2531 15.3065C8.40964 16.5725 5.2224 16.0453 2.95912 14.2117C2.78676 14.072 2.82955 13.804 3.03219 13.7137L4.95677 12.8568C5.04866 12.8159 5.15446 12.823 5.24204 12.8725C6.73377 13.7153 8.59176 13.8649 10.2772 13.1145C11.9626 12.3641 13.0947 10.8833 13.4665 9.21075C13.4883 9.11256 13.5539 9.02918 13.6457 8.98827L15.5702 8.13142Z" fill="white"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.3066 4.74698L15.5067 5.19653C15.5759 5.35178 15.5061 5.53366 15.3508 5.60278L1.29992 11.8586C1.14467 11.9278 0.962794 11.8579 0.893675 11.7027L0.701732 11.2716L0.693457 11.2531C-1.10317 7.21778 0.711626 2.49007 4.74692 0.693443C8.78221 -1.10318 13.51 0.711693 15.3066 4.74698ZM2.82356 8.55367C2.63552 8.63739 2.41991 8.51617 2.40853 8.31065C2.28373 6.05724 3.53858 3.85787 5.72286 2.88536C7.90715 1.91286 10.3813 2.45199 11.9724 4.05256C12.1175 4.19854 12.0633 4.43988 11.8753 4.5236L2.82356 8.55367Z" fill="white"/>
-            </svg>
-            <p style="color: #FFF !important; font-family: 'IBM Plex Sans', sans-serif !important; font-size: 13px !important; font-weight: 600 !important; margin: 0 !important;">Made with Emergent</p>
-        </a>
-    </body>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0F172A" />
+    <title>Azad Senior Secondary School</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
+              display: ['"Cabinet Grotesk"', '"IBM Plex Sans"', 'sans-serif'],
+            },
+            colors: {
+              ink: '#0F172A', ink2: '#1E293B', ash: '#475569',
+              cream: '#FDFBF7', saffron: '#EA580C', saffronDark: '#C2410C',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { font-family: 'IBM Plex Sans', system-ui, sans-serif; background:#FDFBF7; color:#0F172A; }
+      h1, h2, h3, h4, .font-display { font-family: 'Cabinet Grotesk', 'IBM Plex Sans', sans-serif; }
+      ::selection { background-color:#EA580C; color:white; }
+      .grain-bg { background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size: 16px 16px; }
+    </style>
+</head>
+<body>
+    <div id="header-slot"></div>
+
+    <!-- HERO -->
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1524069290683-0457abfe42c3?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600" alt="Students" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/65 to-ink/30"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32 md:pt-32 md:pb-40">
+            <div class="max-w-3xl">
+                <span class="inline-flex items-center gap-2 text-saffron text-xs font-bold uppercase tracking-[0.2em]" data-testid="hero-badge">
+                    Admissions 2026-27 Now Open
+                </span>
+                <h1 class="mt-5 font-display font-bold text-white text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.05]">
+                    Where curious minds<br />
+                    <span class="text-saffron">become bold leaders.</span>
+                </h1>
+                <p class="mt-6 text-lg text-cream/85 max-w-2xl leading-relaxed">
+                    For four decades, Azad Senior Secondary School has nurtured generations of learners through rigorous academics, vibrant arts, athletic excellence and timeless values.
+                </p>
+                <div class="mt-9 flex flex-wrap gap-3">
+                    <a href="/admissions.html" data-testid="hero-apply-btn" class="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-ink bg-saffron rounded-full hover:bg-white transition-colors">Apply for Admission →</a>
+                    <a href="/gallery.html" data-testid="hero-gallery-btn" class="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white bg-transparent border border-white/40 rounded-full hover:bg-white/10 transition-colors">Explore Campus</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats strip -->
+        <div class="relative bg-cream border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="border-l-2 border-saffron pl-4"><div class="font-display text-3xl md:text-4xl font-bold text-ink">40+</div><div class="text-xs uppercase tracking-wider text-ash mt-1">Years of legacy</div></div>
+                <div class="border-l-2 border-saffron pl-4"><div class="font-display text-3xl md:text-4xl font-bold text-ink">2,400</div><div class="text-xs uppercase tracking-wider text-ash mt-1">Students enrolled</div></div>
+                <div class="border-l-2 border-saffron pl-4"><div class="font-display text-3xl md:text-4xl font-bold text-ink">120+</div><div class="text-xs uppercase tracking-wider text-ash mt-1">Expert teachers</div></div>
+                <div class="border-l-2 border-saffron pl-4"><div class="font-display text-3xl md:text-4xl font-bold text-ink">98%</div><div class="text-xs uppercase tracking-wider text-ash mt-1">Board pass rate</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="py-20 md:py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div class="order-2 md:order-1">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-saffron">About Us</span>
+                <h2 class="mt-3 font-display font-bold text-ink text-3xl md:text-4xl lg:text-5xl tracking-tight">A school built on curiosity, character and community.</h2>
+                <p class="mt-5 text-ash leading-relaxed">Founded in 1985, Azad Senior Secondary School is a co-educational RBSE-affiliated institution serving classes Nursery to XII. We blend a rigorous academic curriculum with art, sport, debate and service so students graduate as well-rounded individuals.</p>
+                <ul class="mt-7 space-y-3">
+                    <li class="flex gap-3 text-sm text-ink"><span class="text-saffron">›</span><span>RBSE curriculum with Science, Commerce &amp; Humanities streams</span></li>
+                    <li class="flex gap-3 text-sm text-ink"><span class="text-saffron">›</span><span>Smart classrooms, science labs and a 30,000-volume library</span></li>
+                    <li class="flex gap-3 text-sm text-ink"><span class="text-saffron">›</span><span>Houses, clubs and extracurriculars to nurture every interest</span></li>
+                </ul>
+                <a href="/admissions.html" class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-saffron transition-colors">Begin your journey with us →</a>
+            </div>
+            <div class="order-1 md:order-2 relative">
+                <div class="aspect-[4/5] rounded-3xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1698993026848-f67c1eb7f989?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" alt="Classroom" class="w-full h-full object-cover" />
+                </div>
+                <div class="absolute -bottom-6 -left-6 bg-saffron text-ink p-5 rounded-2xl max-w-[220px] shadow-xl hidden md:block">
+                    <div class="font-display font-bold text-lg leading-tight">Best RBSE School (Delhi NCR) — 2024</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROGRAMS -->
+    <section class="py-20 md:py-28 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-saffron">Our Programs</span>
+                    <h2 class="mt-3 font-display font-bold text-ink text-3xl md:text-4xl lg:text-5xl tracking-tight max-w-2xl">Learning beyond the textbook.</h2>
+                </div>
+                <p class="text-ash max-w-md">From science and humanities to sports and the arts — we offer a breadth of programs that match your child's spark.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="group bg-cream border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300" data-testid="program-science">
+                    <div class="aspect-[4/3] overflow-hidden"><img src="https://images.unsplash.com/photo-1742137587486-fdef8cdd25bd?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Science"></div>
+                    <div class="p-6"><span class="text-xs uppercase font-bold tracking-wider text-saffron">Program</span><h3 class="font-display font-bold text-xl mt-2 text-ink">Science &amp; Innovation</h3><p class="mt-2 text-sm text-ash leading-relaxed">Hands-on labs in Physics, Chemistry, Biology and Computer Science with annual research projects.</p></div>
+                </div>
+                <div class="group bg-cream border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300" data-testid="program-sports">
+                    <div class="aspect-[4/3] overflow-hidden"><img src="https://images.unsplash.com/photo-1771909712619-54b241d2f8ff?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Sports"></div>
+                    <div class="p-6"><span class="text-xs uppercase font-bold tracking-wider text-saffron">Program</span><h3 class="font-display font-bold text-xl mt-2 text-ink">Sports &amp; Athletics</h3><p class="mt-2 text-sm text-ash leading-relaxed">Cricket, basketball, athletics, yoga and chess — our houses compete year-round in inter-school events.</p></div>
+                </div>
+                <div class="group bg-cream border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300" data-testid="program-arts">
+                    <div class="aspect-[4/3] overflow-hidden"><img src="https://images.unsplash.com/photo-1551731409-43eb3e517a1a?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Arts"></div>
+                    <div class="p-6"><span class="text-xs uppercase font-bold tracking-wider text-saffron">Program</span><h3 class="font-display font-bold text-xl mt-2 text-ink">Arts &amp; Culture</h3><p class="mt-2 text-sm text-ash leading-relaxed">Music, dance, theatre and visual arts — students perform on stage every term and lead student-run clubs.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ANNOUNCEMENTS (loaded via JS) -->
+    <section class="py-20 md:py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-saffron">Latest News</span>
+                <h2 class="mt-3 font-display font-bold text-ink text-3xl md:text-4xl lg:text-5xl tracking-tight">Announcements &amp; events</h2>
+            </div>
+            <div id="announcementsGrid" class="grid md:grid-cols-3 gap-6" data-testid="announcements-grid">
+                <p class="text-ash col-span-3">Loading...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-ink rounded-3xl px-8 py-16 md:p-16 relative overflow-hidden grain-bg">
+                <div class="relative max-w-2xl">
+                    <h2 class="font-display font-bold text-white text-3xl md:text-5xl tracking-tight">Ready to join the Azad family?</h2>
+                    <p class="mt-4 text-cream/80 text-lg">Admissions for 2026-27 are now open. Limited seats available across classes.</p>
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="/admissions.html" data-testid="cta-apply-btn" class="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-ink bg-saffron rounded-full hover:bg-white transition-colors">Start Application →</a>
+                        <a href="/contact.html" data-testid="cta-contact-btn" class="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white border border-white/30 rounded-full hover:bg-white/10 transition-colors">Schedule a campus visit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-slot"></div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        renderLayout("home");
+        // Load latest announcements
+        apiFetch("/announcements").then(items => {
+            const grid = document.getElementById("announcementsGrid");
+            if (!items || items.length === 0) { grid.innerHTML = '<p class="text-ash col-span-3">No announcements yet.</p>'; return; }
+            grid.innerHTML = items.slice(0, 3).map(a => `
+                <article class="bg-white border border-slate-200 rounded-2xl p-6 hover:border-ink transition-colors" data-testid="announcement-${a.id}">
+                    <span class="inline-block text-[10px] font-bold uppercase tracking-[0.15em] bg-saffron/10 text-saffronDark px-2.5 py-1 rounded-full">${a.category}</span>
+                    <h3 class="font-display font-bold text-lg mt-4 text-ink leading-tight">${a.title}</h3>
+                    <p class="mt-2 text-sm text-ash leading-relaxed">${a.body}</p>
+                    <div class="text-xs text-ash mt-4">${new Date(a.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
+                </article>
+            `).join("");
+        }).catch(() => {
+            document.getElementById("announcementsGrid").innerHTML = '<p class="text-ash col-span-3">Unable to load announcements.</p>';
+        });
+    </script>
+</body>
 </html>

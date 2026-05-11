@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact — Azad Sr. Sec. School</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: { fontFamily: { sans: ['"IBM Plex Sans"','sans-serif'], display: ['"Cabinet Grotesk"','sans-serif'] }, colors: { ink:'#0F172A', ink2:'#1E293B', ash:'#475569', cream:'#FDFBF7', saffron:'#EA580C', saffronDark:'#C2410C' } } } }
+    </script>
+    <style>body { font-family: 'IBM Plex Sans', sans-serif; background:#FDFBF7; color:#0F172A; } h1,h2,h3,h4,.font-display { font-family: 'Cabinet Grotesk', sans-serif; }</style>
+</head>
+<body>
+    <div id="header-slot"></div>
+
+    <div data-testid="contact-page">
+        <section class="border-b border-slate-200 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-saffron">Get in touch</span>
+                <h1 class="mt-3 font-display font-bold text-ink text-4xl sm:text-5xl lg:text-6xl tracking-tight max-w-3xl">We'd love to hear from you.</h1>
+                <p class="mt-5 text-ash max-w-2xl text-lg">Schedule a campus visit, ask about admissions, or just say hello. Our team responds within one working day.</p>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-5 gap-10">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6"><h4 class="font-display font-semibold text-ink">Campus Address</h4><p class="mt-1 text-sm text-ash whitespace-pre-line leading-relaxed">Sector 12, Civil Lines\nNew Delhi - 110054, India</p></div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6"><h4 class="font-display font-semibold text-ink">Phone</h4><p class="mt-1 text-sm text-ash whitespace-pre-line leading-relaxed">+91 11 2398 5544\n+91 98765 43210</p></div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6"><h4 class="font-display font-semibold text-ink">Email</h4><p class="mt-1 text-sm text-ash whitespace-pre-line leading-relaxed">info@azadschool.edu\nadmissions@azadschool.edu</p></div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6"><h4 class="font-display font-semibold text-ink">School Hours</h4><p class="mt-1 text-sm text-ash whitespace-pre-line leading-relaxed">Mon - Fri: 8:00 AM - 3:30 PM\nSat: 8:00 AM - 12:30 PM</p></div>
+                </div>
+
+                <div class="lg:col-span-3">
+                    <div id="successBox" class="hidden bg-white border border-slate-200 rounded-2xl p-10 text-center" data-testid="contact-success">
+                        <h2 class="font-display font-bold text-2xl text-ink">Message received!</h2>
+                        <p class="mt-2 text-ash">Thank you. We'll get back to you within one working day.</p>
+                        <button onclick="resetContact()" data-testid="contact-new-btn" class="mt-6 inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-ink rounded-full hover:bg-ink2">Send another message</button>
+                    </div>
+                    <form id="contactForm" onsubmit="submitContact(event)" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-10 space-y-5" data-testid="contact-form">
+                        <h2 class="font-display font-bold text-2xl text-ink">Send us a message</h2>
+                        <div class="grid md:grid-cols-2 gap-5">
+                            <label class="block"><span class="block text-sm font-medium text-ink mb-1.5">Your name <span class="text-saffron">*</span></span><input id="c_name" data-testid="contact-input-name" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none"></label>
+                            <label class="block"><span class="block text-sm font-medium text-ink mb-1.5">Email <span class="text-saffron">*</span></span><input id="c_email" data-testid="contact-input-email" type="email" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none"></label>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-5">
+                            <label class="block"><span class="block text-sm font-medium text-ink mb-1.5">Phone (optional)</span><input id="c_phone" data-testid="contact-input-phone" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none"></label>
+                            <label class="block"><span class="block text-sm font-medium text-ink mb-1.5">Subject <span class="text-saffron">*</span></span><input id="c_subject" data-testid="contact-input-subject" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none"></label>
+                        </div>
+                        <label class="block"><span class="block text-sm font-medium text-ink mb-1.5">Message <span class="text-saffron">*</span></span><textarea id="c_message" data-testid="contact-input-message" rows="5" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none"></textarea></label>
+                        <button id="c_submit" type="submit" data-testid="contact-submit-btn" class="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-saffron rounded-full hover:bg-saffronDark disabled:opacity-60">Send message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="pb-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="rounded-3xl overflow-hidden border border-slate-200 bg-white">
+                    <iframe data-testid="contact-map" title="School location" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3501.0762616103146!2d77.21672901508275!3d28.683964482402573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd47e29be7af%3A0x52273d3d1fd5d9e8!2sCivil%20Lines%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1700000000000" width="100%" height="420" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer-slot"></div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        renderLayout("contact");
+        async function submitContact(e) {
+            e.preventDefault();
+            const name = document.getElementById("c_name").value.trim();
+            const email = document.getElementById("c_email").value.trim();
+            const phone = document.getElementById("c_phone").value.trim();
+            const subject = document.getElementById("c_subject").value.trim();
+            const message = document.getElementById("c_message").value.trim();
+            if (!name || !email || !subject || !message) { toast("Please fill all required fields", "error"); return; }
+            const btn = document.getElementById("c_submit"); btn.disabled = true; btn.textContent = "Sending...";
+            try {
+                await apiFetch("/contacts", { method: "POST", body: JSON.stringify({ name, email, phone, subject, message }) });
+                document.getElementById("contactForm").classList.add("hidden");
+                document.getElementById("successBox").classList.remove("hidden");
+                toast("Message sent", "success");
+                document.getElementById("contactForm").reset();
+            } catch (er) { toast(er.message, "error"); }
+            finally { btn.disabled = false; btn.textContent = "Send message"; }
+        }
+        function resetContact() {
+            document.getElementById("successBox").classList.add("hidden");
+            document.getElementById("contactForm").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>

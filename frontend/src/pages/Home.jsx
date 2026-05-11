@@ -74,11 +74,11 @@ export default function Home() {
                             A school built on curiosity, character and community.
                         </h2>
                         <p className="mt-5 text-ash leading-relaxed">
-                            Founded in 1985, Azad Senior Secondary School is a co-educational CBSE-affiliated institution serving classes Nursery to XII. We blend a rigorous academic curriculum with art, sport, debate and service so students graduate as well-rounded individuals.
+                            Founded in 1985, Azad Senior Secondary School is a co-educational RBSE-affiliated institution serving classes Nursery to XII. We blend a rigorous academic curriculum with art, sport, debate and service so students graduate as well-rounded individuals.
                         </p>
                         <ul className="mt-7 space-y-3">
                             {[
-                                "CBSE curriculum with Science, Commerce & Humanities streams",
+                                "RBSE curriculum with Science, Commerce & Humanities streams",
                                 "Smart classrooms, science labs and a 30,000-volume library",
                                 "Houses, clubs and extracurriculars to nurture every interest",
                             ].map(t => (
@@ -98,7 +98,7 @@ export default function Home() {
                         </div>
                         <div className="absolute -bottom-6 -left-6 bg-saffron text-ink p-5 rounded-2xl max-w-[220px] shadow-xl hidden md:block">
                             <Award className="h-7 w-7 mb-2" />
-                            <div className="font-display font-bold text-lg leading-tight">Best CBSE School (Delhi NCR) — 2024</div>
+                            <div className="font-display font-bold text-lg leading-tight">Best RBSE School (Delhi NCR) — 2024</div>
                         </div>
                     </div>
                 </div>

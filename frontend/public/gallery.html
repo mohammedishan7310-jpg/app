@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gallery — Azad Sr. Sec. School</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: { fontFamily: { sans: ['"IBM Plex Sans"','sans-serif'], display: ['"Cabinet Grotesk"','sans-serif'] }, colors: { ink:'#0F172A', ash:'#475569', cream:'#FDFBF7', saffron:'#EA580C', saffronDark:'#C2410C' } } } }
+    </script>
+    <style>body { font-family: 'IBM Plex Sans', system-ui, sans-serif; background:#FDFBF7; color:#0F172A; } h1,h2,h3,.font-display { font-family: 'Cabinet Grotesk', sans-serif; }</style>
+</head>
+<body>
+    <div id="header-slot"></div>
+
+    <div data-testid="gallery-page">
+        <section class="border-b border-slate-200 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-saffron">Campus Gallery</span>
+                <h1 class="mt-3 font-display font-bold text-ink text-4xl sm:text-5xl lg:text-6xl tracking-tight max-w-3xl">Life at Azad — in pictures.</h1>
+                <p class="mt-5 text-ash max-w-2xl text-lg">Glimpses from our classrooms, sports fields, festivals and the everyday joy of school life.</p>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div id="filters" class="flex flex-wrap gap-2 mb-10" data-testid="gallery-filters"></div>
+                <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-testid="gallery-grid"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer-slot"></div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        renderLayout("gallery");
+        const CATS = ["all","events","sports","classrooms","infrastructure"];
+        let active = "all";
+
+        function renderFilters() {
+            document.getElementById("filters").innerHTML = CATS.map(c =>
+                `<button onclick="setCat('${c}')" data-testid="filter-${c}" class="px-4 py-2 rounded-full text-sm font-medium capitalize transition-all ${active===c?"bg-ink text-white":"bg-white text-ink border border-slate-200 hover:border-ink"}">${c}</button>`
+            ).join("");
+        }
+        function setCat(c) { active = c; renderFilters(); load(); }
+
+        async function load() {
+            const grid = document.getElementById("galleryGrid");
+            grid.innerHTML = Array(8).fill('<div class="aspect-square rounded-2xl bg-slate-100 animate-pulse"></div>').join("");
+            try {
+                const url = "/gallery" + (active !== "all" ? `?category=${active}` : "");
+                const items = await apiFetch(url);
+                if (!items.length) {
+                    grid.innerHTML = '<div class="col-span-full text-center py-20" data-testid="gallery-empty"><h3 class="font-display font-bold text-xl text-ink">No images yet</h3><p class="mt-2 text-ash">Our admin team will upload campus photos shortly.</p></div>';
+                    return;
+                }
+                grid.innerHTML = items.map((it, idx) => `
+                    <div class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white ${idx%7===0?"md:col-span-2 md:row-span-2":""}" data-testid="gallery-item-${it.id}">
+                      <div class="${idx%7===0?"aspect-square md:aspect-auto md:h-full":"aspect-square"} overflow-hidden">
+                        <img src="/api/files/${it.storage_path}" alt="${it.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                      <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <div>
+                          <span class="text-[10px] uppercase tracking-wider font-bold text-saffron">${it.category}</span>
+                          <div class="text-white text-sm font-medium">${it.title}</div>
+                        </div>
+                      </div>
+                    </div>
+                `).join("");
+            } catch (e) {
+                grid.innerHTML = `<p class="col-span-full text-center text-ash">Failed to load gallery</p>`;
+            }
+        }
+
+        renderFilters(); load();
+    </script>
+</body>
+</html>

@@ -41,7 +41,7 @@ export default function Footer() {
             <div className="border-t border-white/10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 text-xs text-cream/60 flex flex-col sm:flex-row justify-between gap-2">
                     <span>© {new Date().getFullYear()} Azad Senior Secondary School. All rights reserved.</span>
-                    <span>Affiliated to CBSE | Recognized by Ministry of Education</span>
+                    <span>Affiliated to RBSE | Recognized by Ministry of Education</span>
                 </div>
             </div>
         </footer>

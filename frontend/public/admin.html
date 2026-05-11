@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin — Azad Sr. Sec. School</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { theme: { extend: { fontFamily: { sans: ['"IBM Plex Sans"','sans-serif'], display: ['"Cabinet Grotesk"','sans-serif'] }, colors: { ink:'#0F172A', ink2:'#1E293B', ash:'#475569', cream:'#FDFBF7', saffron:'#EA580C', saffronDark:'#C2410C' } } } }
+    </script>
+    <style>body { font-family: 'IBM Plex Sans', sans-serif; background:#F8FAFC; color:#0F172A; } h1,h2,h3,h4,.font-display { font-family: 'Cabinet Grotesk', sans-serif; }</style>
+</head>
+<body data-testid="admin-dashboard">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="hidden md:flex flex-col w-64 bg-ink text-white min-h-screen">
+            <a href="/" class="flex items-center gap-2.5 px-6 h-16 border-b border-white/10">
+                <div class="h-9 w-9 rounded-xl bg-saffron flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F172A" stroke-width="2.2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
+                <div class="leading-tight">
+                    <div class="font-display font-bold text-white text-sm">Azad School</div>
+                    <div class="text-[10px] uppercase tracking-[0.18em] text-saffron">Admin</div>
+                </div>
+            </a>
+            <nav id="sidebar" class="flex-1 px-3 py-6 space-y-1"></nav>
+            <div class="px-4 py-4 border-t border-white/10">
+                <div id="adminEmail" class="text-xs text-cream/60 mb-2"></div>
+                <button onclick="logout()" data-testid="admin-logout-btn" class="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm bg-white/10 hover:bg-white/20 rounded-lg">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Mobile top -->
+        <div class="md:hidden fixed top-0 inset-x-0 bg-ink text-white px-4 h-14 flex items-center justify-between z-40">
+            <a href="/" class="font-display font-bold">Azad Admin</a>
+            <button onclick="logout()" class="text-cream/80 text-sm">Logout</button>
+        </div>
+
+        <main class="flex-1 mt-14 md:mt-0">
+            <div id="mobileTabs" class="md:hidden border-b border-slate-200 bg-white px-4 py-3 overflow-x-auto flex gap-2"></div>
+            <div id="panel"></div>
+        </main>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        const TABS = [
+            { id: "overview", label: "Overview" },
+            { id: "admissions", label: "Admissions" },
+            { id: "contacts", label: "Contacts" },
+            { id: "gallery", label: "Gallery" },
+            { id: "announcements", label: "Announcements" },
+        ];
+
+        function currentTab() {
+            const t = location.hash.replace("#", "") || "overview";
+            return TABS.find(x => x.id === t) ? t : "overview";
+        }
+
+        function renderNav() {
+            const tab = currentTab();
+            document.getElementById("sidebar").innerHTML = TABS.map(t =>
+                `<a href="#${t.id}" data-testid="sidebar-${t.label.toLowerCase()}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${tab===t.id?"bg-saffron text-ink":"text-cream/80 hover:bg-white/10 hover:text-white"}">${t.label}</a>`
+            ).join("");
+            document.getElementById("mobileTabs").innerHTML = TABS.map(t =>
+                `<a href="#${t.id}" class="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium ${tab===t.id?"bg-ink text-white":"bg-cream text-ink border border-slate-200"}">${t.label}</a>`
+            ).join("");
+        }
+
+        async function renderPanel() {
+            const tab = currentTab();
+            const panel = document.getElementById("panel");
+            if (tab === "overview") return renderOverview(panel);
+            if (tab === "admissions") return renderAdmissions(panel);
+            if (tab === "contacts") return renderContacts(panel);
+            if (tab === "gallery") return renderGallery(panel);
+            if (tab === "announcements") return renderAnnouncements(panel);
+        }
+
+        window.addEventListener("hashchange", () => { renderNav(); renderPanel(); });
+
+        async function renderOverview(panel) {
+            panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-overview">
+              <h1 class="font-display font-bold text-2xl md:text-3xl text-ink">Dashboard</h1>
+              <p class="text-sm text-ash mt-1 mb-8">At-a-glance view of your school operations.</p>
+              <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
+            </div>`;
+            try {
+                const s = await apiFetch("/admin/stats");
+                const cards = [
+                    { k: "admissions", label: "Total Admissions" },
+                    { k: "pending_admissions", label: "Pending Reviews" },
+                    { k: "contacts", label: "Contact Messages" },
+                    { k: "gallery_images", label: "Gallery Images" },
+                    { k: "announcements", label: "Announcements" },
+                ];
+                document.getElementById("statsGrid").innerHTML = cards.map(c =>
+                    `<div class="bg-white border border-slate-200 rounded-2xl p-5" data-testid="stat-${c.k}">
+                      <div class="font-display font-bold text-3xl mt-3 text-ink">${s[c.k] ?? "—"}</div>
+                      <div class="text-xs text-ash mt-1 uppercase tracking-wider">${c.label}</div>
+                    </div>`
+                ).join("");
+            } catch (e) { toast(e.message, "error"); }
+        }
+
+        // ---- ADMISSIONS ----
+        async function renderAdmissions(panel) {
+            panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-admissions-panel">
+              <h1 class="font-display font-bold text-2xl md:text-3xl text-ink mb-6">Admissions</h1>
+              <div id="admBody" class="bg-white border border-slate-200 rounded-2xl overflow-hidden">Loading...</div>
+              <div id="admModal" class="fixed inset-0 bg-ink/60 hidden items-center justify-center z-50 p-4" onclick="closeModal(event)"></div>
+            </div>`;
+            const items = await apiFetch("/admin/admissions");
+            const body = document.getElementById("admBody");
+            if (!items.length) { body.innerHTML = '<div class="text-center text-ash py-12">No applications yet.</div>'; return; }
+            body.innerHTML = `<div class="overflow-x-auto"><table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200">
+                <tr><th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Student</th><th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Class</th><th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Parent</th><th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Phone</th><th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Date</th><th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Status</th><th class="px-4 py-3 text-xs font-semibold uppercase tracking-wider">Actions</th></tr>
+              </thead>
+              <tbody>${items.map(a => `
+                <tr class="border-b border-slate-200 hover:bg-slate-50" data-testid="admission-row-${a.id}">
+                  <td class="px-4 py-3"><div class="font-medium">${a.student_name}</div><div class="text-xs text-ash">${a.gender} • ${a.date_of_birth}</div></td>
+                  <td class="px-4 py-3">${a.class_applying}</td>
+                  <td class="px-4 py-3">${a.parent_name}<br><span class="text-xs text-ash">${a.parent_email}</span></td>
+                  <td class="px-4 py-3">${a.parent_phone}</td>
+                  <td class="px-4 py-3">${new Date(a.created_at).toLocaleDateString()}</td>
+                  <td class="px-4 py-3">${statusBadge(a.status)}</td>
+                  <td class="px-4 py-3"><button onclick='openAdm(${JSON.stringify(JSON.stringify(a))})' data-testid="view-admission-${a.id}" class="text-saffronDark hover:underline text-xs font-medium">View</button></td>
+                </tr>`).join("")}</tbody>
+            </table></div>`;
+        }
+        function statusBadge(s) {
+            const map = { pending: "bg-amber-100 text-amber-800", approved: "bg-green-100 text-green-800", rejected: "bg-red-100 text-red-700" };
+            return `<span class="inline-block px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold ${map[s] || "bg-slate-100 text-ink"}">${s}</span>`;
+        }
+        function openAdm(jsonStr) {
+            const a = JSON.parse(JSON.parse(jsonStr));
+            const m = document.getElementById("admModal");
+            m.classList.remove("hidden"); m.classList.add("flex");
+            m.innerHTML = `<div class="bg-white rounded-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()" data-testid="admission-modal">
+              <h3 class="font-display font-bold text-xl text-ink">${a.student_name}</h3>
+              <div class="mt-4 space-y-2 text-sm">
+                ${[["Class",a.class_applying],["DOB",a.date_of_birth],["Gender",a.gender],["Previous School",a.previous_school||"-"],["Parent",a.parent_name],["Email",a.parent_email],["Phone",a.parent_phone],["Address",a.address],["Notes",a.message||"-"],["Submitted",new Date(a.created_at).toLocaleString()]].map(([k,v]) => `<div class="flex gap-3"><span class="text-ash w-32 flex-shrink-0">${k}</span><span class="text-ink">${v}</span></div>`).join("")}
+              </div>
+              <div class="mt-5 flex flex-wrap gap-2">
+                <button onclick="setStatus('${a.id}','approved')" data-testid="approve-admission" class="px-4 py-2 text-xs font-semibold bg-saffron text-white rounded-full">Approve</button>
+                <button onclick="setStatus('${a.id}','rejected')" data-testid="reject-admission" class="px-4 py-2 text-xs font-semibold bg-white border border-slate-300 text-ink rounded-full">Reject</button>
+                <button onclick="setStatus('${a.id}','pending')" class="px-4 py-2 text-xs font-semibold bg-white border border-slate-300 text-ink rounded-full">Mark Pending</button>
+                <button onclick="closeModal()" class="ml-auto px-4 py-2 text-xs text-ash">Close</button>
+              </div>
+            </div>`;
+        }
+        function closeModal(e) { if (e && e.target.id !== "admModal") return; const m = document.getElementById("admModal"); if (m) { m.classList.add("hidden"); m.classList.remove("flex"); } }
+        async function setStatus(id, status) {
+            try {
+                const fd = new FormData(); fd.append("status", status);
+                const res = await fetch("/api/admin/admissions/" + id, { method: "PATCH", credentials: "include", body: fd });
+                if (!res.ok) throw new Error("Update failed");
+                toast("Status updated", "success"); closeModal(); renderPanel();
+            } catch (e) { toast(e.message, "error"); }
+        }
+
+        // ---- CONTACTS ----
+        async function renderContacts(panel) {
+            panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-contacts-panel">
+              <h1 class="font-display font-bold text-2xl md:text-3xl text-ink mb-6">Contact Messages</h1>
+              <div id="contactsList" class="space-y-3">Loading...</div>
+            </div>`;
+            const items = await apiFetch("/admin/contacts");
+            const list = document.getElementById("contactsList");
+            if (!items.length) { list.innerHTML = '<div class="text-center text-ash py-12 bg-white border border-slate-200 rounded-2xl">No messages yet.</div>'; return; }
+            list.innerHTML = items.map(c => `
+              <div class="bg-white border border-slate-200 rounded-2xl p-5" data-testid="contact-row-${c.id}">
+                <div class="flex items-start justify-between gap-3">
+                  <div><div class="font-display font-semibold text-ink">${c.subject}</div><div class="text-xs text-ash mt-1">${c.name} • ${c.email}${c.phone?` • ${c.phone}`:""}</div></div>
+                  <div class="text-xs text-ash">${new Date(c.created_at).toLocaleDateString()}</div>
+                </div>
+                <p class="mt-3 text-sm text-ink whitespace-pre-wrap">${escapeHtml(c.message)}</p>
+              </div>`).join("");
+        }
+        function escapeHtml(s) { return (s||"").replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[ch]); }
+
+        // ---- GALLERY ----
+        async function renderGallery(panel) {
+            panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-gallery-panel">
+              <h1 class="font-display font-bold text-2xl md:text-3xl text-ink mb-6">Gallery</h1>
+              <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+                <h3 class="font-display font-semibold text-ink mb-4">Upload new image</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                  <input id="g_title" data-testid="gallery-title-input" placeholder="Title (optional)" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <select id="g_category" data-testid="gallery-category-select" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                    <option value="events">Events</option><option value="sports">Sports</option><option value="classrooms">Classrooms</option><option value="infrastructure">Infrastructure</option>
+                  </select>
+                  <label data-testid="gallery-upload-label" class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-saffron rounded-lg hover:bg-saffronDark">
+                    <span id="g_upload_text">Choose image</span>
+                    <input id="g_file" type="file" accept="image/*" class="hidden" data-testid="gallery-upload-input" onchange="doUpload(this)">
+                  </label>
+                </div>
+              </div>
+              <div id="galleryAdminGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">Loading...</div>
+            </div>`;
+            await loadAdminGallery();
+        }
+        async function loadAdminGallery() {
+            const items = await apiFetch("/gallery");
+            const grid = document.getElementById("galleryAdminGrid");
+            if (!items.length) { grid.innerHTML = '<div class="col-span-full text-center text-ash py-12 bg-white border border-slate-200 rounded-2xl">No images yet — upload your first image above.</div>'; return; }
+            grid.innerHTML = items.map(it => `
+              <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden group relative" data-testid="admin-gallery-item-${it.id}">
+                <div class="aspect-square overflow-hidden"><img src="/api/files/${it.storage_path}" alt="${it.title}" class="w-full h-full object-cover"></div>
+                <div class="p-3"><div class="text-sm font-medium text-ink truncate">${it.title}</div><div class="text-xs text-ash capitalize">${it.category}</div></div>
+                <button onclick="deleteImg('${it.id}')" data-testid="delete-gallery-${it.id}" class="absolute top-2 right-2 p-2 bg-white/90 hover:bg-red-500 hover:text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+              </div>`).join("");
+        }
+        async function doUpload(input) {
+            const file = input.files?.[0]; if (!file) return;
+            const txt = document.getElementById("g_upload_text"); txt.textContent = "Uploading...";
+            const fd = new FormData();
+            fd.append("file", file);
+            fd.append("title", document.getElementById("g_title").value || file.name);
+            fd.append("category", document.getElementById("g_category").value);
+            try {
+                const res = await fetch("/api/admin/gallery", { method: "POST", credentials: "include", body: fd });
+                if (!res.ok) throw new Error("Upload failed");
+                toast("Uploaded", "success"); document.getElementById("g_title").value = ""; input.value = "";
+                await loadAdminGallery();
+            } catch (e) { toast(e.message, "error"); }
+            finally { txt.textContent = "Choose image"; }
+        }
+        async function deleteImg(id) {
+            if (!confirm("Delete this image?")) return;
+            try { await apiFetch("/admin/gallery/" + id, { method: "DELETE" }); toast("Deleted", "success"); loadAdminGallery(); }
+            catch (e) { toast(e.message, "error"); }
+        }
+
+        // ---- ANNOUNCEMENTS ----
+        async function renderAnnouncements(panel) {
+            panel.innerHTML = `<div class="p-6 md:p-10" data-testid="admin-announcements-panel">
+              <h1 class="font-display font-bold text-2xl md:text-3xl text-ink mb-6">Announcements</h1>
+              <form onsubmit="createAnn(event)" class="bg-white border border-slate-200 rounded-2xl p-6 mb-6 space-y-4" data-testid="announcement-form">
+                <div class="grid md:grid-cols-3 gap-4">
+                  <input id="a_title" data-testid="announcement-title" placeholder="Title" class="md:col-span-2 px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm">
+                  <select id="a_category" data-testid="announcement-category" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm"><option>General</option><option>Admission</option><option>Event</option><option>Achievement</option></select>
+                </div>
+                <textarea id="a_body" data-testid="announcement-body" rows="3" placeholder="Body" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-cream focus:border-saffron outline-none text-sm"></textarea>
+                <button type="submit" data-testid="announcement-submit" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-ink rounded-full hover:bg-ink2">+ Add announcement</button>
+              </form>
+              <div id="annList" class="space-y-3">Loading...</div>
+            </div>`;
+            await loadAnnouncements();
+        }
+        async function loadAnnouncements() {
+            const items = await apiFetch("/announcements");
+            const list = document.getElementById("annList");
+            if (!items.length) { list.innerHTML = '<div class="text-center text-ash py-12 bg-white border border-slate-200 rounded-2xl">No announcements yet.</div>'; return; }
+            list.innerHTML = items.map(a => `
+              <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-start justify-between gap-3" data-testid="announcement-row-${a.id}">
+                <div>
+                  <span class="inline-block text-[10px] font-bold uppercase tracking-[0.15em] bg-saffron/10 text-saffronDark px-2.5 py-1 rounded-full">${a.category}</span>
+                  <h3 class="font-display font-bold mt-2 text-ink">${escapeHtml(a.title)}</h3>
+                  <p class="text-sm text-ash mt-1">${escapeHtml(a.body)}</p>
+                  <div class="text-xs text-ash mt-2">${new Date(a.created_at).toLocaleString()}</div>
+                </div>
+                <button onclick="deleteAnn('${a.id}')" data-testid="delete-announcement-${a.id}" class="p-2 hover:bg-red-50 hover:text-red-600 rounded-lg text-ash">🗑</button>
+              </div>`).join("");
+        }
+        async function createAnn(e) {
+            e.preventDefault();
+            const title = document.getElementById("a_title").value.trim();
+            const body = document.getElementById("a_body").value.trim();
+            const category = document.getElementById("a_category").value;
+            if (!title || !body) { toast("Title and body required", "error"); return; }
+            try {
+                await apiFetch("/admin/announcements", { method: "POST", body: JSON.stringify({ title, body, category }) });
+                toast("Created", "success");
+                document.getElementById("a_title").value = ""; document.getElementById("a_body").value = "";
+                loadAnnouncements();
+            } catch (e) { toast(e.message, "error"); }
+        }
+        async function deleteAnn(id) {
+            if (!confirm("Delete this announcement?")) return;
+            try { await apiFetch("/admin/announcements/" + id, { method: "DELETE" }); toast("Deleted", "success"); loadAnnouncements(); }
+            catch (e) { toast(e.message, "error"); }
+        }
+
+        // ---- BOOT ----
+        (async () => {
+            const user = await requireAdmin();
+            if (!user) return;
+            document.getElementById("adminEmail").textContent = user.email;
+            renderNav();
+            renderPanel();
+        })();
+    </script>
+</body>
+</html>
