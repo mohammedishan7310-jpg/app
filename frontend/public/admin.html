@@ -147,7 +147,7 @@
                   <td class="px-4 py-3">${a.parent_phone}</td>
                   <td class="px-4 py-3">${new Date(a.created_at).toLocaleDateString()}</td>
                   <td class="px-4 py-3">${statusBadge(a.status)}</td>
-                  <td class="px-4 py-3"><button onclick='openAdm(${JSON.stringify(JSON.stringify(a))})' data-testid="view-admission-${a.id}" class="text-saffronDark hover:underline text-xs font-medium">View</button></td>
+                  <td class="px-4 py-3"><button onclick='openAdm(${JSON.stringify(a)})' data-testid="view-admission-${a.id}" class="text-saffronDark hover:underline text-xs font-medium">View</button></td>
                 </tr>`).join("")}</tbody>
             </table></div>`;
         }
@@ -156,7 +156,7 @@
             return `<span class="inline-block px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold ${map[s] || "bg-slate-100 text-ink"}">${s}</span>`;
         }
         function openAdm(jsonStr) {
-            const a = JSON.parse(JSON.parse(jsonStr));
+            const a = jsonStr;
             const m = document.getElementById("admModal");
             m.classList.remove("hidden"); m.classList.add("flex");
             m.innerHTML = `<div class="bg-white rounded-2xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()" data-testid="admission-modal">

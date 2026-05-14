@@ -107,7 +107,7 @@ function renderLayout(active) {
             </div>
             <div class="leading-tight">
               <div class="font-display font-bold text-white text-base">Azad Sr. Sec. School</div>
-              <div class="text-[11px] uppercase tracking-[0.18em] text-saffron">Est. 1985</div>
+              <div class="text-[11px] uppercase tracking-[0.18em] text-saffron">Est. 1993</div>
             </div>
           </div>
           <p class="mt-4 max-w-md text-sm leading-relaxed text-cream/70">A vibrant learning community committed to academic excellence, character building and helping every student discover their potential.</p>
@@ -125,8 +125,8 @@ function renderLayout(active) {
         <div>
           <h4 class="font-display font-semibold text-white text-sm uppercase tracking-wider mb-4">Contact</h4>
           <ul class="space-y-3 text-sm text-cream/80">
-            <li>Sector 12, Civil Lines, New Delhi - 110054</li>
-            <li>+91 11 2398 5544</li>
+            <li>WR9R+56Q Azad Public Sr. Sec. School, Surajpole Bazar, Topkhana Hazuri, Jaipur, Rajasthan 302003</li>
+            <li>+91 8955383786</li>
             <li>info@azadschool.edu</li>
           </ul>
         </div>
