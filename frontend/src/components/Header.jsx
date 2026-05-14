@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const links = [
     { to: "/", label: "Home" },
@@ -15,15 +15,24 @@ export default function Header() {
         <header className="sticky top-0 z-50 backdrop-blur-xl bg-cream/80 border-b border-[#E2E8F0]" data-testid="site-header">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-2.5" data-testid="brand-link">
-                    <div className="h-9 w-9 rounded-xl bg-ink flex items-center justify-center">
-                        <GraduationCap className="h-5 w-5 text-saffron" strokeWidth={2.2} />
-                    </div>
-                    <div className="leading-tight">
-                        <div className="font-display font-bold text-ink text-base">Azad</div>
-                        <div className="text-[11px] uppercase tracking-[0.18em] text-ash">Sr. Sec. School</div>
-                    </div>
-                </Link>
+  <div className="h-9 w-9 overflow-hidden rounded-full">
+    <img
+      src="https://i.ibb.co/HfX5ykV2/Picsart-26-05-11-18-25-06-985.jpg"
+      alt="logo"
+      className="h-9 w-9 rounded-full object-cover"
+    />
+  </div>
 
+  <div className="leading-tight">
+    <div className="font-display font-bold text-ink text-base">
+      Azad
+    </div>
+
+    <div className="text-[11px] uppercase tracking-[0.18em] text-ash">
+      Sr. Sec. School
+    </div>
+  </div>
+</Link>
                 <nav className="hidden md:flex items-center gap-8">
                     {links.map(l => (
                         <NavLink
