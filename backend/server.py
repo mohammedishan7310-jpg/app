@@ -461,16 +461,15 @@ async def attendance_lookup(payload: LookupRequest):
 
 
 # ---------- Startup ----------
-@app.on_event("startup")
-async def startup():
-    # Indexes
-    await db.users.create_index("email", unique=True)
-    await db.users.create_index("id", unique=True)
-    await db.admissions.create_index("id", unique=True)
-    await db.contacts.create_index("id", unique=True)
-    await db.gallery.create_index("id", unique=True)
-    await db.announcements.create_index("id", unique=True)
-
+# @app.on_event("startup")
+# async def startup():
+#     # Indexes
+#     await db.users.create_index("email", unique=True)
+#     await db.users.create_index("id", unique=True)
+#     await db.admissions.create_index("id", unique=True)
+#     await db.contacts.create_index("id", unique=True)
+#     await db.gallery.create_index("id", unique=True)
+#     await db.announcements.create_index("id", unique=True)
     # Seed admin
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@azadschool.edu").lower()
     admin_password = os.environ.get("ADMIN_PASSWORD", "Admin@2026")
