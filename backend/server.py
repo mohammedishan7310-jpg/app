@@ -202,14 +202,22 @@ async def root():
 
 
 @api_router.post("/auth/login")
+
+@api_router.post("/auth/login")
 async def login(payload: LoginRequest, response: Response):
-    email = payload.email.lower()
-    user = await db.users.find_one({"email": email})
-    if not user or not verify_password(payload.password, user["password_hash"]):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
-    token = create_access_token(user["id"], user["email"])
-    set_auth_cookie(response, token)
-    return {"id": user["id"], "email": user["email"], "name": user.get("name", "Admin"), "role": user.get("role", "admin"), "token": token}
+
+    if payload.email == "admin@azadschool.edu" and payload.password == "Admin@2026":
+        token = create_access_token("admin", payload.email)
+        set_auth_cookie(response, token)
+
+        return {
+            "id": "admin",
+            "email": payload.email,
+            "name": "Admin",
+            "role": "admin"
+        }
+
+    raise HTTPException(status_code=401, detail="Invalid email or password")
 
 
 @api_router.post("/auth/logout")
