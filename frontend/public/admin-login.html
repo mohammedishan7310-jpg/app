@@ -45,19 +45,31 @@
         getCurrentUser().then(u => { if (u) window.location.href = "/admin.html"; });
 
         async function doLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById("login_email").value.trim();
-            const password = document.getElementById("login_password").value;
-            const btn = document.getElementById("loginBtn"); btn.disabled = true; btn.textContent = "Signing in...";
-            try {
-                await apiFetch("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
-                toast("Welcome back", "success");
-                window.location.href = "/admin.html";
-            } catch (er) {
-                toast(er.message || "Login failed", "error");
-                btn.disabled = false; btn.textContent = "Sign in";
-            }
-        }
+    e.preventDefault();
+    const email = document.getElementById("login_email").value.trim();
+    const password = document.getElementById("login_password").value;
+    const btn = document.getElementById("loginBtn");
+
+    btn.disabled = true;
+    btn.textContent = "Signing in...";
+
+    try {
+        const user = await apiFetch("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+        });
+
+        localStorage.setItem("access_token", user.token);
+
+        toast("Welcome back", "success");
+        window.location.href = "/admin.html";
+
+    } catch (er) {
+        toast(er.message || "Login failed", "error");
+        btn.disabled = false;
+        btn.textContent = "Sign in";
+    }
+}
     </script>
 </body>
 </html>
