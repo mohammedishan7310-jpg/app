@@ -216,13 +216,13 @@ async def login(payload: LoginRequest, response: Response):
         token = create_access_token("admin", payload.email)
         set_auth_cookie(response, token)
 
-        return {
-            "id": "admin",
-            "email": payload.email,
-            "name": "Admin",
-            "role": "admin"
-        }
-
+       return {
+    "id": "admin",
+    "email": payload.email,
+    "name": "Admin",
+    "role": "admin",
+    "token": token
+}
     raise HTTPException(status_code=401, detail="Invalid email or password")
 
 
