@@ -211,8 +211,6 @@ async def root():
 
 @api_router.post("/auth/login")
 async def login(payload: LoginRequest, response: Response):
-  
-     async def login(payload: LoginRequest, response: Response):
 
     if payload.email == "admin@azadschool.edu" and payload.password == "Admin@2026":
         token = create_access_token("admin", payload.email)
