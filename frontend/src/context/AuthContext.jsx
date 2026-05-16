@@ -7,18 +7,9 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [checking, setChecking] = useState(true);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const { data } = await api.get("/auth/me");
-                setUser(data);
-            } catch {
-                setUser(false);
-            } finally {
-                setChecking(false);
-            }
-        })();
-    }, []);
+   useEffect(() => {
+  setChecking(false);
+}, []);
 
     const login = async (email, password) => {
         try {
