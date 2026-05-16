@@ -104,15 +104,16 @@ def create_access_token(user_id: str, email: str) -> str:
 
 
 def set_auth_cookie(response: Response, token: str):
-    response.set_cookie(
+   response.set_cookie(
     key="access_token",
     value=token,
     httponly=True,
-    secure=True,
-    samesite="none",
+    secure=False,
+    samesite="lax",
     max_age=28800,
     path="/",
 )
+
 
 
 async def get_current_user(request: Request) -> dict:
