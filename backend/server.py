@@ -106,7 +106,7 @@ def create_access_token(user_id: str, email: str) -> str:
 def set_auth_cookie(response: Response, token: str):
     response.set_cookie(
         key="access_token", value=token, httponly=True,
-        secure=False, samesite="lax", max_age=28800, path="/",
+        secure=True, samesite="none", max_age=28800, path="/",
     )
 
 
