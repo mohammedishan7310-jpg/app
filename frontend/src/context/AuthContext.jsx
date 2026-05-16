@@ -14,7 +14,10 @@ export function AuthProvider({ children }) {
     const login = async (email, password) => {
         try {
             const { data } = await api.post("/auth/login", { email, password });
-            setUser(data);
+
+localStorage.setItem("access_token", data.token);
+
+setUser(data);
             return { ok: true };
         } catch (e) {
             return { ok: false, error: formatApiErrorDetail(e.response?.data?.detail) || e.message };
