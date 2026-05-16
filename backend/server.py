@@ -108,13 +108,11 @@ def set_auth_cookie(response: Response, token: str):
     key="access_token",
     value=token,
     httponly=True,
-    secure=False,
-    samesite="lax",
+    secure=True,
+    samesite="none",
     max_age=28800,
     path="/",
 )
-
-
 from typing import Optional
 from fastapi import FastAPI, APIRouter, HTTPException, Response, Cookie, Header
 async def get_current_user(
