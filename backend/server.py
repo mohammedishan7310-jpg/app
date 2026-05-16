@@ -212,21 +212,21 @@ async def root():
 @api_router.post("/auth/login")
 async def login(payload: LoginRequest, response: Response):
   
-      if payload.email == "admin@azadschool.edu" and payload.password == "Admin@2026":
-         token = create_access_token("admin", payload.email)
-         set_auth_cookie(response, token)
+     async def login(payload: LoginRequest, response: Response):
+
+    if payload.email == "admin@azadschool.edu" and payload.password == "Admin@2026":
+        token = create_access_token("admin", payload.email)
+        set_auth_cookie(response, token)
 
         return {
-        "id": "admin",
-        "email": payload.email,
-        "name": "Admin",
-        "role": "admin",
-        "token": token
-          }
+            "id": "admin",
+            "email": payload.email,
+            "name": "Admin",
+            "role": "admin",
+            "token": token
+        }
 
     raise HTTPException(status_code=401, detail="Invalid email or password")
-
-
 @api_router.post("/auth/logout")
 async def logout(response: Response):
     response.delete_cookie("access_token", path="/")
