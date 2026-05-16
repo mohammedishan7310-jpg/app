@@ -129,7 +129,7 @@ async def get_current_user(
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(token, get_jwt_secret(), algorithms=[JWT_ALGORITHM])
         return payload
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid token")
