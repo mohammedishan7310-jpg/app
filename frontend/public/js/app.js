@@ -9,17 +9,25 @@ const API = 'https://app-gtvw.onrender.com/api';
 
 // ---- fetch wrapper ----
 async function apiFetch(path, options = {}) {
-    const res = await fetch(API + path, {
-        credentials: "include",
-        headers: { "Content-Type": "application/json", ...(options.headers || {}) },
-        ...options,
-    });
-    if (!res.ok) {
-        let detail = "Request failed";
-        try { const j = await res.json(); detail = j.detail || detail; } catch { /* ignore */ }
-        throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
-    }
-    return res.json();
+  const token = localStorage.getItem("access_token");
+
+  const res = await fetch(API + path, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.headers || {})
+    },
+    ...options,
+  });
+
+  if (!res.ok) {
+    let detail = "Request failed";
+    try { const j = await res.json(); detail = j.detail || detail; } catch {}
+    throw new Error(detail);
+  }
+
+  return res.json();
 }
 
 // ---- toast (tiny replacement for sonner) ----
